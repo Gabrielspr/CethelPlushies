@@ -1,0 +1,180 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Cethel - Plushies Ethel & Cedric</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f5e8e1;
+            color: #3c2f2f;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(to right, #4a2e2e, #8b5a5a);
+            color: #fff;
+            text-align: center;
+            padding: 2em;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        nav {
+            background-color: #3c2f2f;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1.5em;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #f5e8e1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2em auto;
+            padding: 0 1em;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2em;
+            margin-top: 2em;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1em;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .product-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .product-card h3 {
+            font-size: 1.5em;
+            margin: 0.5em 0;
+            color: #4a2e2e;
+        }
+        .product-card p {
+            font-size: 1em;
+            color: #666;
+        }
+        .product-card .price {
+            font-size: 1.2em;
+            color: #8b5a5a;
+            font-weight: bold;
+            margin: 0.5em 0;
+        }
+        .product-card button {
+            background-color: #4a2e2e;
+            color: #fff;
+            border: none;
+            padding: 0.8em 1.5em;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .product-card button:hover {
+            background-color: #8b5a5a;
+        }
+        footer {
+            background-color: #3c2f2f;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Boutique Cethel</h1>
+        <p>Entregue-se ao abraço macio de Ethel & Cedric</p>
+    </header>
+    <nav>
+        <a href="#inicio">Início</a>
+        <a href="#loja">Loja</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+    </nav>
+    <div class="container">
+        <h2>Descubra a Edição Cethel</h2>
+        <p>Cada plushie é um sussurro de desejo, criado para embalar seus sonhos e despertar sua imaginação. Ethel e Cedric esperam para serem seus.</p>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="ethel_sussurro_de_seda.jpg" alt="Plushie Ethel - Sussurro de Seda">
+                <h3>Plushie Ethel</h3>
+                <p>Macia como um suspiro de amante, o pelo de veludo de Ethel e seus pontos delicados evocam um espírito terno e indomado.</p>
+                <div class="price">R$199,99</div>
+                <button>Adicionar ao Carrinho</button>
+            </div>
+            <div class="product-card">
+                <img src="cedric_fogo_contido.jpg" alt="Plushie Cedric - Fogo Contido">
+                <h3>Plushie Cedric</h3>
+                <p>A forma plush de Cedric irradia calor, seu design ousado é um convite para abraçar seus desejos mais profundos.</p>
+                <div class="price">R$199,99</div>
+                <button>Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Boutique Cethel. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
