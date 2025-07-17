@@ -1,48 +1,9 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boutique Cethel - Plushies Ethel & Cethel</title>
+    <title>Boutique Cethel - Plushies Cedric & Ethel</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -145,7 +106,7 @@
 <body>
     <header>
         <h1>Boutique Cethel</h1>
-        <p>Entregue-se ao abraço macio de Ethel & Cethel</p>
+        <p>Entregue-se ao abraço macio de Cedric & Ethel</p>
     </header>
     <nav>
         <a href="#inicio">Início</a>
@@ -155,19 +116,19 @@
     </nav>
     <div class="container">
         <h2>Descubra a Edição Cethel</h2>
-        <p>Cada plushie é um sussurro de desejo, criado para embalar seus sonhos e despertar sua imaginação. Ethel e Cethel esperam para serem seus.</p>
+        <p>Cada plushie é um sussurro de desejo, criado para embalar seus sonhos e despertar sua imaginação. Cedric e Ethel esperam para serem seus.</p>
         <div class="product-grid">
             <div class="product-card">
-                <img src="ethel_sussurro_de_seda.png" alt="Plushie Ethel - Sussurro de Seda">
-                <h3>Plushie Ethel</h3>
-                <p>Macia como um suspiro de amante, o pelo de veludo de Ethel e seus pontos delicados evocam um espírito terno e indomado.</p>
+                <img src="cedric_fogo_contido.png" alt="Plushie Cedric - Fogo Contido">
+                <h3>Plushie Cedric</h3>
+                <p>A forma plush de Cedric irradia calor, seu design ousado é um convite para abraçar seus desejos mais profundos.</p>
                 <div class="price">R$199,99</div>
                 <button>Adicionar ao Carrinho</button>
             </div>
             <div class="product-card">
-                <img src="cethel_fogo_contido.png" alt="Plushie Cethel - Fogo Contido">
-                <h3>Plushie Cethel</h3>
-                <p>A forma plush de Cethel irradia calor, seu design ousado é um convite para abraçar seus desejos mais profundos.</p>
+                <img src="ethel_sussurro_de_seda.png" alt="Plushie Ethel - Sussurro de Seda">
+                <h3>Plushie Ethel</h3>
+                <p>Macia como um suspiro de amante, o pelo de veludo de Ethel e seus pontos delicados evocam um espírito terno e indomado.</p>
                 <div class="price">R$199,99</div>
                 <button>Adicionar ao Carrinho</button>
             </div>
